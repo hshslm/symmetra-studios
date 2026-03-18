@@ -33,7 +33,12 @@ export function useTextScramble<T extends HTMLElement>(
   }, [enabled]);
 
   const onMouseEnter = useCallback((): void => {
-    if (!scramblerRef.current || !enabled) return;
+    if (!scramblerRef.current || !enabled || !ref.current) return;
+
+    // Lock width so scramble characters don't shift layout
+    const el = ref.current;
+    el.style.display = "inline-block";
+    el.style.width = `${el.offsetWidth}px`;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       if (text) scramblerRef.current.setText(text);
@@ -44,14 +49,13 @@ export function useTextScramble<T extends HTMLElement>(
   }, [text, enabled]);
 
   const onMouseLeave = useCallback((): void => {
-    if (!scramblerRef.current || !enabled) return;
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      scramblerRef.current.reset();
-      return;
-    }
+    if (!scramblerRef.current || !enabled || !ref.current) return;
 
     scramblerRef.current.reset();
+
+    // Release locked width
+    ref.current.style.width = "";
+    ref.current.style.display = "";
   }, [enabled]);
 
   return {

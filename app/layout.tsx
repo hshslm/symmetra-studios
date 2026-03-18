@@ -3,6 +3,7 @@ import { displayFont, bodyFont } from "@/lib/fonts";
 import GSAPProvider from "@/components/providers/GSAPProvider";
 import LenisProvider from "@/components/providers/LenisProvider";
 import SplashScreen from "@/components/splash/SplashScreen";
+import Navbar from "@/components/nav/Navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className="bg-bg text-text font-body antialiased overflow-x-hidden">
         <GSAPProvider>
           <LenisProvider>
+            <Navbar />
             <SplashScreen assets={[]}>{children}</SplashScreen>
           </LenisProvider>
         </GSAPProvider>

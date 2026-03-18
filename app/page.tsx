@@ -3,16 +3,14 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { useTextScramble } from "@/hooks/useTextScramble";
 import { useMagnetic } from "@/hooks/useMagnetic";
+import TextSlide from "@/components/TextSlide";
 import {
   useScrollEntrance,
   useScrollEntranceGroup,
 } from "@/hooks/useScrollEntrance";
 import LineDivider from "@/components/LineDivider";
 import TextReveal from "@/components/TextReveal";
-
-const navItems = ["Work", "Studio", "Contact", "About"];
 
 const sections = [
   { number: "01", name: "Hero" },
@@ -21,37 +19,6 @@ const sections = [
   { number: "04", name: "Contact" },
 ];
 
-function ScrambleNavItem({ label }: { label: string }): React.ReactElement {
-  const { ref, onMouseEnter, onMouseLeave } =
-    useTextScramble<HTMLSpanElement>();
-
-  return (
-    <span
-      ref={ref}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className="cursor-pointer font-body text-sm uppercase tracking-widest text-text-secondary transition-colors duration-300 hover:text-white"
-    >
-      {label}
-    </span>
-  );
-}
-
-function ScrambleHeading(): React.ReactElement {
-  const { ref, onMouseEnter, onMouseLeave } =
-    useTextScramble<HTMLSpanElement>();
-
-  return (
-    <span
-      ref={ref}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      className="cursor-pointer font-body text-lg uppercase tracking-widest text-text-secondary transition-colors duration-300 hover:text-white"
-    >
-      VIEW PROJECT
-    </span>
-  );
-}
 
 function MagneticButton({
   label,
@@ -94,7 +61,7 @@ function ScrollEntranceDemo(): React.ReactElement {
         <span className="font-body text-sm uppercase tracking-widest text-text-secondary">
           Scroll Entrance — Singles
         </span>
-        <div className="flex flex-row items-center gap-6">
+        <div className="flex flex-col items-center gap-6 sm:flex-row">
           <div
             ref={box1Ref}
             className="flex h-48 w-48 items-center justify-center rounded-lg bg-surface font-body text-sm text-text-secondary"
@@ -120,7 +87,7 @@ function ScrollEntranceDemo(): React.ReactElement {
         <span className="font-body text-sm uppercase tracking-widest text-text-secondary">
           Scroll Entrance — Staggered Grid
         </span>
-        <div ref={gridRef} className="grid grid-cols-3 gap-4">
+        <div ref={gridRef} className="grid grid-cols-2 gap-4 sm:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <div
               key={n}
@@ -177,19 +144,13 @@ export default function Home(): React.ReactElement {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 z-50 flex w-full items-center justify-center gap-8 px-6 py-6">
-        {navItems.map((item) => (
-          <ScrambleNavItem key={item} label={item} />
-        ))}
-      </nav>
-
       <section className="flex min-h-dvh flex-col items-center justify-center gap-6 px-6 text-center">
         <div ref={heroRef}>
           <TextReveal
             as="h1"
             scrollTrigger={false}
             delay={0.2}
-            className="font-display text-6xl font-bold tracking-tight text-text md:text-8xl"
+            className="font-display text-4xl font-bold tracking-tight text-text sm:text-6xl md:text-8xl"
           >
             SYMMETRA STUDIOS
           </TextReveal>
@@ -215,7 +176,7 @@ export default function Home(): React.ReactElement {
           {index > 0 && <LineDivider className="max-content" />}
           <section className="flex min-h-screen flex-col items-center justify-center gap-4 text-center">
             <div className="max-content flex flex-col items-center gap-4">
-              <span className="font-display text-[120px] font-bold leading-none text-text-dim">
+              <span className="font-display text-7xl font-bold leading-none text-text-dim md:text-[120px]">
                 {section.number}
               </span>
               <TextReveal
@@ -241,8 +202,57 @@ export default function Home(): React.ReactElement {
         </div>
       ))}
 
-      <section className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
-        <ScrambleHeading />
+      <section className="flex min-h-[50vh] flex-col items-center justify-center gap-8 text-center">
+        <span className="font-body text-sm uppercase tracking-widest text-text-secondary">
+          TextSlide 3D Barrel
+        </span>
+        <div className="flex flex-col items-center gap-6 sm:flex-row">
+          <TextSlide
+            text="WORK"
+            perspective="100px"
+            rotation={50}
+            letterStagger={20}
+            className="cursor-pointer font-body text-sm uppercase tracking-widest text-text-secondary"
+          />
+          <TextSlide
+            text="STUDIO"
+            perspective="100px"
+            rotation={50}
+            letterStagger={20}
+            className="cursor-pointer font-body text-sm uppercase tracking-widest text-text-secondary"
+          />
+        </div>
+        <div className="flex flex-col items-center gap-6">
+          <TextSlide
+            text="Work"
+            perspective="200px"
+            rotation={50}
+            letterStagger={25}
+            className="cursor-pointer font-display text-6xl font-bold text-text"
+          />
+          <TextSlide
+            text="View Project"
+            perspective="120px"
+            rotation={45}
+            letterStagger={20}
+            className="cursor-pointer font-body text-lg uppercase tracking-widest text-text-secondary"
+          />
+          <TextSlide
+            text="Instagram"
+            perspective="80px"
+            rotation={45}
+            letterStagger={15}
+            className="cursor-pointer font-body text-[11px] uppercase tracking-[0.15em] text-text-secondary"
+          />
+          <TextSlide
+            text="Let's Create"
+            perspective="250px"
+            rotation={50}
+            letterStagger={30}
+            duration={500}
+            className="cursor-pointer font-display text-5xl font-bold text-text sm:text-8xl"
+          />
+        </div>
       </section>
 
       <MagneticSection />

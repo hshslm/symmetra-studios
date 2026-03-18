@@ -50,23 +50,23 @@ export default function SplashCounter({
     const tl = gsap.timeline();
     tl.to(barRef.current, {
       width: "105%",
-      duration: 0.3,
+      duration: 0.15,
       ease: "power2.in",
     });
     tl.to(barRef.current, {
       x: "100vw",
       width: "0%",
-      duration: 0.5,
+      duration: 0.3,
       ease: "power3.in",
     });
     tl.to(
       counterRef.current,
       {
         opacity: 0,
-        duration: 0.3,
+        duration: 0.2,
         ease: "power2.out",
       },
-      "<0.1"
+      "<0.05"
     );
   }, [isComplete]);
 
@@ -74,7 +74,7 @@ export default function SplashCounter({
     <>
       <span
         ref={counterRef}
-        className="fixed bottom-8 right-8 z-[60] font-body text-sm tracking-wider text-text-secondary tabular-nums"
+        className="fixed bottom-8 right-8 z-[70] font-body text-sm tracking-wider text-text-secondary tabular-nums"
         style={{ fontVariantNumeric: "tabular-nums" }}
       >
         00
@@ -82,7 +82,7 @@ export default function SplashCounter({
 
       <div
         ref={barContainerRef}
-        className="fixed bottom-0 left-0 z-[60] h-[2px] w-full"
+        className="fixed bottom-0 left-0 z-[70] h-[2px] w-full"
       >
         <div
           ref={barRef}

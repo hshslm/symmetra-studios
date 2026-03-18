@@ -25,7 +25,7 @@ const SplashName = forwardRef<SplashNameHandle>(function SplashName(_, ref) {
       await new Promise<void>((resolve) => {
         gsap.to(containerRef.current, {
           clipPath: "inset(0% 0 0 0)",
-          duration: 0.6,
+          duration: 0.35,
           ease: "power3.out",
           onComplete: resolve,
         });

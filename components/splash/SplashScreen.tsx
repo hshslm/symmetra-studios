@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import { gsap } from "@/lib/gsap";
 import { useGSAP } from "@gsap/react";
 import SplashLogo from "./SplashLogo";
 import SplashName, { type SplashNameHandle } from "./SplashName";
 import SplashCounter from "./SplashCounter";
 import { useAssetLoader } from "@/hooks/useAssetLoader";
+import { useLenis } from "@/components/providers/LenisProvider";
 
 interface SplashScreenProps {
   /** URLs of assets to preload during splash */
@@ -14,20 +15,43 @@ interface SplashScreenProps {
   children: React.ReactNode;
 }
 
-function shouldSkipSplash(): boolean {
-  if (typeof window === "undefined") return false;
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-  return !!(sessionStorage.getItem("symmetra-splash-seen") || reducedMotion);
+// Hydration-safe check for whether splash should be skipped.
+// Returns false on server, checks sessionStorage + reduced motion on client.
+const subscribeNoop = (): (() => void) => () => {};
+
+function useShouldSkipSplash(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => {
+      const reducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      return !!(
+        sessionStorage.getItem("symmetra-splash-seen") || reducedMotion
+      );
+    },
+    () => false // Server snapshot: never skip (always render splash HTML)
+  );
 }
 
 export default function SplashScreen({
   assets = [],
   children,
 }: SplashScreenProps): React.ReactElement {
-  const [showSplash, setShowSplash] = useState(() => !shouldSkipSplash());
-  const [splashDone, setSplashDone] = useState(() => shouldSkipSplash());
+  const shouldSkip = useShouldSkipSplash();
+  const [showSplash, setShowSplash] = useState(!shouldSkip);
+  const [splashDone, setSplashDone] = useState(shouldSkip);
+  const lenis = useLenis();
+
+  // Stop Lenis during splash, start after
+  useEffect(() => {
+    if (!lenis) return;
+    if (showSplash) {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
+  }, [showSplash, lenis]);
   const splashRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<SVGSVGElement>(null);
   const nameRef = useRef<SplashNameHandle>(null);
@@ -36,7 +60,7 @@ export default function SplashScreen({
 
   const { progress, isComplete } = useAssetLoader({
     assets: showSplash ? assets : [],
-    minimumDuration: 3500,
+    minimumDuration: 1500,
   });
 
   const runExitAnimation = useCallback(async () => {
@@ -45,68 +69,30 @@ export default function SplashScreen({
 
     const exitTl = gsap.timeline();
 
-    // Beat 1: Logo dematerializes — reverse order (light → mid → dark)
+    // Logo + name fade out together, fast
     if (logoRef.current) {
-      const svg = logoRef.current;
-      const lightPaths = svg.querySelectorAll('[data-group="light"]');
-      const midPaths = svg.querySelectorAll('[data-group="mid"]');
-      const darkPaths = svg.querySelectorAll('[data-group="dark"]');
-
-      // Light paths vanish first (reverse of entrance where they appeared last)
-      exitTl.to(lightPaths, {
+      exitTl.to(logoRef.current, {
         opacity: 0,
-        duration: 0.6,
-        stagger: 0.02,
-        ease: "power2.in",
-      }, 0);
-
-      // Mid paths follow
-      exitTl.to(midPaths, {
-        opacity: 0,
-        duration: 0.5,
-        stagger: 0.012,
-        ease: "power2.in",
-      }, 0.15);
-
-      // Dark paths last (barely visible, dissolving into the background)
-      exitTl.to(darkPaths, {
-        opacity: 0,
-        duration: 0.4,
-        stagger: 0.015,
-        ease: "power2.in",
-      }, 0.3);
-
-      // Scale breathe out (reverse: 1.0 → 0.95)
-      exitTl.to(svg, {
-        scale: 0.95,
-        duration: 1.2,
+        scale: 0.97,
+        duration: 0.3,
         ease: "power2.in",
       }, 0);
     }
 
-    // Beat 1b: Name fades out alongside logo
     if (nameContainerRef.current) {
-      exitTl.to(
-        nameContainerRef.current,
-        {
-          opacity: 0,
-          y: 10,
-          duration: 0.8,
-          ease: "power2.inOut",
-        },
-        0.1
-      );
+      exitTl.to(nameContainerRef.current, {
+        opacity: 0,
+        duration: 0.25,
+        ease: "power2.in",
+      }, 0);
     }
 
-    // Beat 2: Hold — let the black breathe for a moment
-    exitTl.to({}, { duration: 0.4 });
-
-    // Beat 3: Curtain wipe — slow, cinematic reveal of page beneath
+    // Curtain wipe immediately after
     exitTl.to(splashRef.current, {
       clipPath: "inset(0 0 100% 0)",
-      duration: 1.4,
+      duration: 0.5,
       ease: "expo.inOut",
-    });
+    }, 0.2);
 
     await exitTl;
 
@@ -126,14 +112,14 @@ export default function SplashScreen({
 
       const tl = gsap.timeline();
 
-      gsap.set(svg, { scale: 0.95 });
+      gsap.set(svg, { scale: 0.97 });
 
       tl.to(
         darkPaths,
         {
           opacity: 1,
-          duration: 0.5,
-          stagger: 0.02,
+          duration: 0.3,
+          stagger: 0.01,
           ease: "power2.out",
         },
         0
@@ -143,7 +129,18 @@ export default function SplashScreen({
         midPaths,
         {
           opacity: 1,
-          duration: 0.6,
+          duration: 0.3,
+          stagger: 0.008,
+          ease: "power2.out",
+        },
+        0.08
+      );
+
+      tl.to(
+        lightPaths,
+        {
+          opacity: 1,
+          duration: 0.4,
           stagger: 0.015,
           ease: "power2.out",
         },
@@ -151,21 +148,10 @@ export default function SplashScreen({
       );
 
       tl.to(
-        lightPaths,
-        {
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.03,
-          ease: "power2.out",
-        },
-        0.3
-      );
-
-      tl.to(
         svg,
         {
           scale: 1,
-          duration: 1.5,
+          duration: 0.8,
           ease: "power2.out",
         },
         0
@@ -173,7 +159,7 @@ export default function SplashScreen({
 
       tl.add(() => {
         nameRef.current?.play();
-      }, 1.5);
+      }, 0.6);
     },
     { dependencies: [showSplash] }
   );
@@ -183,7 +169,7 @@ export default function SplashScreen({
 
     const timer = setTimeout(() => {
       runExitAnimation();
-    }, 800);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [isComplete, showSplash, runExitAnimation]);
@@ -197,7 +183,7 @@ export default function SplashScreen({
       {showSplash && (
         <div
           ref={splashRef}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-bg"
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-bg"
           style={{ clipPath: "inset(0 0 0 0)" }}
         >
           <SplashLogo ref={logoRef} className="h-auto w-24 sm:w-32" />
