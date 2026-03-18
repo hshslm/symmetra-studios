@@ -120,10 +120,7 @@ function ScrollEntranceDemo(): React.ReactElement {
         <span className="font-body text-sm uppercase tracking-widest text-text-secondary">
           Scroll Entrance — Staggered Grid
         </span>
-        <div
-          ref={gridRef}
-          className="grid grid-cols-3 gap-4"
-        >
+        <div ref={gridRef} className="grid grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((n) => (
             <div
               key={n}

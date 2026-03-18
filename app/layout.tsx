@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { displayFont, bodyFont } from "@/lib/fonts";
 import GSAPProvider from "@/components/providers/GSAPProvider";
 import LenisProvider from "@/components/providers/LenisProvider";
+import SplashScreen from "@/components/splash/SplashScreen";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,7 +32,9 @@ export default function RootLayout({
     >
       <body className="bg-bg text-text font-body antialiased overflow-x-hidden">
         <GSAPProvider>
-          <LenisProvider>{children}</LenisProvider>
+          <LenisProvider>
+            <SplashScreen assets={[]}>{children}</SplashScreen>
+          </LenisProvider>
         </GSAPProvider>
       </body>
     </html>
