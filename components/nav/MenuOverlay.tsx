@@ -249,6 +249,7 @@ export default function MenuOverlay({
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
+            data-cursor="view"
             className="font-body text-[11px] uppercase tracking-[0.15em] text-text-secondary transition-colors duration-300 hover:text-white"
           >
 {link.label}
@@ -259,6 +260,7 @@ export default function MenuOverlay({
       <a
         ref={emailRef}
         href="mailto:hello@symmetrastudios.com"
+        data-cursor="email"
         className="mt-4 font-body text-sm text-text-secondary opacity-0 transition-colors duration-300 hover:text-white"
       >
 hello@symmetrastudios.com

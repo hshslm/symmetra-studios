@@ -255,6 +255,44 @@ export default function Home(): React.ReactElement {
         </div>
       </section>
 
+      <section className="flex min-h-[50vh] flex-col items-center justify-center gap-8 px-6 text-center">
+        <span className="font-body text-sm uppercase tracking-widest text-text-secondary">
+          Custom Cursor States
+        </span>
+        <div className="grid grid-cols-5 gap-4">
+          <div
+            data-cursor="view"
+            className="flex h-40 items-center justify-center rounded bg-surface font-body text-sm text-text-secondary"
+          >
+            View
+          </div>
+          <div
+            data-cursor="play"
+            className="flex h-40 items-center justify-center rounded bg-surface font-body text-sm text-text-secondary"
+          >
+            Play
+          </div>
+          <div
+            data-cursor="pause"
+            className="flex h-40 items-center justify-center rounded bg-surface font-body text-sm text-text-secondary"
+          >
+            Pause
+          </div>
+          <div
+            data-cursor="email"
+            className="flex h-40 items-center justify-center rounded bg-surface font-body text-sm text-text-secondary"
+          >
+            Email
+          </div>
+          <div
+            data-cursor="hide"
+            className="flex h-40 items-center justify-center rounded bg-surface font-body text-sm text-text-secondary"
+          >
+            Hide
+          </div>
+        </div>
+      </section>
+
       <MagneticSection />
 
       <ScrollEntranceDemo />

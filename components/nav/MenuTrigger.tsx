@@ -100,6 +100,7 @@ const MenuTrigger = function MenuTrigger({
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      data-cursor="menu"
       className="group fixed top-6 right-6 z-[52] flex h-12 w-12 items-center justify-center md:top-8 md:right-10"
       aria-label={isOpen ? "Close menu" : "Open menu"}
       aria-expanded={isOpen}
