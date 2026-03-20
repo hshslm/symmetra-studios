@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, SplitText, ScrollTrigger } from "@/lib/gsap";
+import { onPageReady } from "@/lib/splash-state";
 
 // Ensure plugins are available
 void SplitText;
@@ -60,8 +61,10 @@ export default function TextReveal({
         stagger,
         ease,
         delay,
-        paused: useScrollTrigger,
+        paused: true,
       });
+
+      let cleanupSplash: (() => void) | undefined;
 
       if (useScrollTrigger) {
         ScrollTrigger.create({
@@ -70,9 +73,12 @@ export default function TextReveal({
           onEnter: () => tween.play(),
           once: true,
         });
+      } else {
+        cleanupSplash = onPageReady(() => tween.play());
       }
 
       return () => {
+        cleanupSplash?.();
         split.revert();
       };
     },

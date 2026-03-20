@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { onPageReady } from "@/lib/splash-state";
 
 void ScrollTrigger;
 
@@ -66,8 +67,10 @@ export function useScrollEntrance<T extends HTMLElement>(
         duration,
         ease,
         delay,
-        paused: useScrollTrigger,
+        paused: true,
       });
+
+      let cleanupSplash: (() => void) | undefined;
 
       if (useScrollTrigger) {
         ScrollTrigger.create({
@@ -76,7 +79,11 @@ export function useScrollEntrance<T extends HTMLElement>(
           onEnter: () => tween.play(),
           once: true,
         });
+      } else {
+        cleanupSplash = onPageReady(() => tween.play());
       }
+
+      return () => cleanupSplash?.();
     },
     { dependencies: [enabled] }
   );
@@ -126,8 +133,10 @@ export function useScrollEntranceGroup<T extends HTMLElement>(
         ease,
         delay,
         stagger,
-        paused: useScrollTrigger,
+        paused: true,
       });
+
+      let cleanupSplash: (() => void) | undefined;
 
       if (useScrollTrigger) {
         ScrollTrigger.create({
@@ -136,7 +145,11 @@ export function useScrollEntranceGroup<T extends HTMLElement>(
           onEnter: () => tween.play(),
           once: true,
         });
+      } else {
+        cleanupSplash = onPageReady(() => tween.play());
       }
+
+      return () => cleanupSplash?.();
     },
     { dependencies: [enabled] }
   );

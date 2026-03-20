@@ -9,6 +9,7 @@ import {
 } from "react";
 import Lenis from "lenis";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { setLenisInstance } from "@/lib/lenis-instance";
 
 const LenisContext = createContext<Lenis | null>(null);
 
@@ -54,6 +55,7 @@ export default function LenisProvider({
       smoothWheel: true,
     });
     lenisInstance = instance;
+    setLenisInstance(instance);
     listeners.forEach((cb) => cb());
 
     instance.on("scroll", ScrollTrigger.update);
@@ -64,6 +66,7 @@ export default function LenisProvider({
 
     return () => {
       gsap.ticker.remove(instance.raf);
+      setLenisInstance(null);
       instance.destroy();
       lenisInstance = null;
       initialized.current = false;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
+import { useTransitionRouter } from "next-transition-router";
 import { gsap, Observer, DrawSVGPlugin } from "@/lib/gsap";
 import { useLenis } from "@/components/providers/LenisProvider";
 import MenuLink from "./MenuLink";
@@ -38,6 +39,7 @@ export default function MenuOverlay({
   const emailRef = useRef<HTMLAnchorElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const lenis = useLenis();
+  const router = useTransitionRouter();
 
   // Circle expand/collapse animation
   useEffect(() => {
@@ -198,18 +200,23 @@ export default function MenuOverlay({
   const handleNavigate = useCallback(
     (href: string): void => {
       onClose();
+
       if (href.startsWith("#")) {
+        // Hash link: scroll after menu closes, no page transition
         setTimeout(() => {
           const el = document.getElementById(href.slice(1));
           if (el) el.scrollIntoView({ behavior: "smooth" });
-        }, 700);
-      } else {
-        setTimeout(() => {
-          window.location.href = href;
-        }, 700);
+        }, 500);
+        return;
       }
+
+      // Wait for menu circle-collapse to mostly complete (~83%),
+      // then trigger page transition. The overlay covers the remnant.
+      setTimeout(() => {
+        router.push(href);
+      }, 500);
     },
-    [onClose]
+    [onClose, router],
   );
 
   return (

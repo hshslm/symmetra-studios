@@ -5,6 +5,7 @@ import LenisProvider from "@/components/providers/LenisProvider";
 import SplashScreen from "@/components/splash/SplashScreen";
 import Navbar from "@/components/nav/Navbar";
 import CursorProvider from "@/components/cursor/CursorProvider";
+import TransitionWrapper from "@/components/transitions/TransitionWrapper";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,8 +37,11 @@ export default function RootLayout({
         <GSAPProvider>
           <CursorProvider>
             <LenisProvider>
-              <Navbar />
-              <SplashScreen assets={[]}>{children}</SplashScreen>
+              <SplashScreen />
+              <TransitionWrapper>
+                <Navbar />
+                <div id="page-content">{children}</div>
+              </TransitionWrapper>
             </LenisProvider>
           </CursorProvider>
         </GSAPProvider>

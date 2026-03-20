@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import Link from "next/link";
+import { Link } from "next-transition-router";
 
 export default function NavLogo(): React.ReactElement {
   return (

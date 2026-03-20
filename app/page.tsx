@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { onPageReady } from "@/lib/splash-state";
 import { useMagnetic } from "@/hooks/useMagnetic";
 import TextSlide from "@/components/TextSlide";
 import {
@@ -134,12 +135,14 @@ export default function Home(): React.ReactElement {
 
   useGSAP(() => {
     if (!heroRef.current) return;
-    gsap.from(heroRef.current, {
+    const tween = gsap.from(heroRef.current, {
       opacity: 0,
       y: 60,
       duration: 1.2,
       ease: "power3.out",
+      paused: true,
     });
+    return onPageReady(() => tween.play());
   });
 
   return (

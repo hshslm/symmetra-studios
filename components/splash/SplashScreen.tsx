@@ -8,11 +8,11 @@ import SplashName, { type SplashNameHandle } from "./SplashName";
 import SplashCounter from "./SplashCounter";
 import { useAssetLoader } from "@/hooks/useAssetLoader";
 import { useLenis } from "@/components/providers/LenisProvider";
+import { markSplashComplete } from "@/lib/splash-state";
 
 interface SplashScreenProps {
   /** URLs of assets to preload during splash */
   assets?: string[];
-  children: React.ReactNode;
 }
 
 // Hydration-safe check for whether splash should be skipped.
@@ -36,12 +36,16 @@ function useShouldSkipSplash(): boolean {
 
 export default function SplashScreen({
   assets = [],
-  children,
-}: SplashScreenProps): React.ReactElement {
+}: SplashScreenProps): React.ReactElement | null {
   const shouldSkip = useShouldSkipSplash();
-  const [showSplash, setShowSplash] = useState(!shouldSkip);
-  const [splashDone, setSplashDone] = useState(shouldSkip);
+  const [exitDone, setExitDone] = useState(false);
+  const showSplash = !shouldSkip && !exitDone;
   const lenis = useLenis();
+
+  // When splash is no longer shown (skipped or exited), signal completion
+  useEffect(() => {
+    if (!showSplash) markSplashComplete();
+  }, [showSplash]);
 
   // Stop Lenis during splash, start after
   useEffect(() => {
@@ -96,9 +100,7 @@ export default function SplashScreen({
 
     await exitTl;
 
-    sessionStorage.setItem("symmetra-splash-seen", "true");
-    setSplashDone(true);
-    setShowSplash(false);
+    setExitDone(true);
   }, []);
 
   useGSAP(
@@ -174,31 +176,23 @@ export default function SplashScreen({
     return () => clearTimeout(timer);
   }, [isComplete, showSplash, runExitAnimation]);
 
-  if (!showSplash && splashDone) {
-    return <>{children}</>;
+  if (!showSplash) {
+    return null;
   }
 
   return (
-    <>
-      {showSplash && (
-        <div
-          ref={splashRef}
-          className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-bg"
-          style={{ clipPath: "inset(0 0 0 0)" }}
-        >
-          <SplashLogo ref={logoRef} className="h-auto w-24 sm:w-32" />
+    <div
+      ref={splashRef}
+      className="fixed inset-0 z-[60] flex flex-col items-center justify-center bg-bg"
+      style={{ clipPath: "inset(0 0 0 0)" }}
+    >
+      <SplashLogo ref={logoRef} className="h-auto w-24 sm:w-32" />
 
-          <div ref={nameContainerRef} className="mt-6">
-            <SplashName ref={nameRef} />
-          </div>
-
-          <SplashCounter progress={progress} isComplete={isComplete} />
-        </div>
-      )}
-
-      <div style={{ visibility: splashDone ? "visible" : "hidden" }}>
-        {children}
+      <div ref={nameContainerRef} className="mt-6">
+        <SplashName ref={nameRef} />
       </div>
-    </>
+
+      <SplashCounter progress={progress} isComplete={isComplete} />
+    </div>
   );
 }
