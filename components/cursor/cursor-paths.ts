@@ -9,9 +9,9 @@ export const cursorPaths = {
   // Play triangle (pointing right)
   play: "M8,5 L20,12 L8,19 Z",
 
-  // Pause — two bars connected by a hairline bridge (single closed path)
+  // Pause — two bars connected by an invisible bridge (single closed path)
   pause:
-    "M7,5 L10,5 L10,11.5 L14,11.5 L14,5 L17,5 L17,19 L14,19 L14,12.5 L10,12.5 L10,19 L7,19 Z",
+    "M7,5 L10,5 L10,11.99 L14,11.99 L14,5 L17,5 L17,19 L14,19 L14,12.01 L10,12.01 L10,19 L7,19 Z",
 
   // Arrow pointing top-right — filled diagonal shaft + L-shaped arrowhead
   arrow:
