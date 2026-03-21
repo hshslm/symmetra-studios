@@ -15,9 +15,9 @@ interface MenuOverlayProps {
 }
 
 const menuLinks = [
-  { number: "01", label: "Work", href: "/work" },
-  { number: "02", label: "Studio", href: "/studio" },
-  { number: "03", label: "Contact", href: "#contact" },
+  { label: "Work", href: "/work" },
+  { label: "Studio", href: "/studio" },
+  { label: "Contact", href: "#contact" },
 ];
 
 const socialLinks = [
@@ -222,22 +222,26 @@ export default function MenuOverlay({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-[51] hidden flex-col justify-center bg-bg px-8 md:px-16 lg:px-24"
+      className="fixed inset-0 z-[51] hidden flex-col items-center justify-center bg-bg"
       style={{ clipPath: "circle(0% at calc(100% - 48px) 48px)" }}
       aria-hidden={!isOpen}
       role="dialog"
       aria-modal="true"
       aria-label="Navigation menu"
     >
-      <div ref={linksContainerRef} className="flex flex-col gap-2 md:gap-3">
+      {/* Horizontal nav links */}
+      <div
+        ref={linksContainerRef}
+        className="grid w-full max-w-6xl grid-cols-1 px-4 sm:grid-cols-3 sm:px-0"
+      >
         {menuLinks.map((link) => (
           <div
             key={link.href}
             data-menu-link
+            className="flex items-center justify-center"
             style={{ clipPath: "inset(100% 0 0 0)" }}
           >
             <MenuLink
-              number={link.number}
               label={link.label}
               href={link.href}
               onNavigate={handleNavigate}
@@ -246,9 +250,11 @@ export default function MenuOverlay({
         ))}
       </div>
 
+      {/* Socials */}
       <div
         ref={socialsRef}
-        className="mt-12 flex gap-6 opacity-0 md:mt-16"
+        className="mt-8 flex flex-wrap justify-center gap-4 opacity-0
+                   sm:mt-10 sm:gap-6 md:mt-14"
       >
         {socialLinks.map((link) => (
           <a
@@ -257,20 +263,25 @@ export default function MenuOverlay({
             target="_blank"
             rel="noopener noreferrer"
             data-cursor="view"
-            className="font-body text-[11px] uppercase tracking-[0.15em] text-text-secondary transition-colors duration-300 hover:text-white"
+            className="font-body text-[11px] uppercase tracking-[0.15em]
+                       text-white/30 transition-colors duration-300
+                       hover:text-white"
           >
-{link.label}
+            {link.label}
           </a>
         ))}
       </div>
 
+      {/* Email */}
       <a
         ref={emailRef}
         href="mailto:hello@symmetrastudios.com"
         data-cursor="email"
-        className="mt-4 font-body text-sm text-text-secondary opacity-0 transition-colors duration-300 hover:text-white"
+        className="mt-3 font-body text-xs text-white/25 opacity-0
+                   transition-colors duration-300 hover:text-white
+                   sm:mt-4 sm:text-sm"
       >
-hello@symmetrastudios.com
+        hello@symmetrastudios.com
       </a>
     </div>
   );

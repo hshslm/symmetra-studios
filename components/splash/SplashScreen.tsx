@@ -64,7 +64,7 @@ export default function SplashScreen({
 
   const { progress, isComplete } = useAssetLoader({
     assets: showSplash ? assets : [],
-    minimumDuration: 1500,
+    minimumDuration: 3500,
   });
 
   const runExitAnimation = useCallback(async () => {
@@ -120,9 +120,9 @@ export default function SplashScreen({
         darkPaths,
         {
           opacity: 1,
-          duration: 0.3,
-          stagger: 0.01,
-          ease: "power2.out",
+          duration: 1.4,
+          stagger: 0.04,
+          ease: "power1.out",
         },
         0
       );
@@ -131,37 +131,37 @@ export default function SplashScreen({
         midPaths,
         {
           opacity: 1,
-          duration: 0.3,
-          stagger: 0.008,
-          ease: "power2.out",
+          duration: 1.4,
+          stagger: 0.035,
+          ease: "power1.out",
         },
-        0.08
+        0.5
       );
 
       tl.to(
         lightPaths,
         {
           opacity: 1,
-          duration: 0.4,
-          stagger: 0.015,
-          ease: "power2.out",
+          duration: 1.6,
+          stagger: 0.05,
+          ease: "power1.out",
         },
-        0.15
+        1.0
       );
 
       tl.to(
         svg,
         {
           scale: 1,
-          duration: 0.8,
-          ease: "power2.out",
+          duration: 3.0,
+          ease: "power1.out",
         },
         0
       );
 
       tl.add(() => {
         nameRef.current?.play();
-      }, 0.6);
+      }, 2.2);
     },
     { dependencies: [showSplash] }
   );

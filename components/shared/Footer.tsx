@@ -125,15 +125,27 @@ export default function Footer(): React.ReactElement {
           <ul className="space-y-3">
             {navLinks.map((link) => (
               <li key={link.label}>
-                <a href={link.href} className="inline-block">
-                  <TextSlide
-                    text={link.label}
-                    letterStagger={15}
-                    duration={300}
-                    className="font-body text-sm text-white/50
-                               transition-colors duration-300 hover:text-white"
-                  />
-                </a>
+                {link.href.startsWith("mailto:") ? (
+                  <a href={link.href} className="inline-block">
+                    <TextSlide
+                      text={link.label}
+                      letterStagger={15}
+                      duration={300}
+                      className="font-body text-sm text-white/50
+                                 transition-colors duration-300 hover:text-white"
+                    />
+                  </a>
+                ) : (
+                  <Link href={link.href} className="inline-block">
+                    <TextSlide
+                      text={link.label}
+                      letterStagger={15}
+                      duration={300}
+                      className="font-body text-sm text-white/50
+                                 transition-colors duration-300 hover:text-white"
+                    />
+                  </Link>
+                )}
               </li>
             ))}
           </ul>

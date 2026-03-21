@@ -83,11 +83,13 @@ export default function CursorProvider({
     if (isTouchDevice) return;
 
     const cursorMap: Record<string, { shape: CursorShape; label: string }> = {
-      view: { shape: "arrow", label: "View" },
+      view: { shape: "arrow", label: "" },
       play: { shape: "play", label: "Play" },
       pause: { shape: "pause", label: "Pause" },
-      email: { shape: "arrow", label: "Email" },
-      menu: { shape: "dot", label: "Menu" },
+      email: { shape: "arrow", label: "" },
+      menu: { shape: "dot", label: "" },
+      drag: { shape: "dot", label: "" },
+      pointer: { shape: "dot", label: "" },
       hide: { shape: "dot", label: "" },
     };
 

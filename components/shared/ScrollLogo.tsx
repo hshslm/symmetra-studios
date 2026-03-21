@@ -1,76 +1,214 @@
 "use client";
 
-import { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { useRef, useEffect, useCallback } from "react";
+import { usePathname } from "next/navigation";
+import { gsap } from "@/lib/gsap";
 
-void ScrollTrigger;
+function getNavPos(): { x: number; y: number; h: number } {
+  const isMd = window.innerWidth >= 768;
+  return { x: isMd ? 40 : 24, y: isMd ? 32 : 24, h: isMd ? 40 : 40 };
+}
+
+function getHeroSize(): number {
+  return Math.max(80, Math.min(window.innerWidth * 0.09, 110));
+}
 
 export default function ScrollLogo(): React.ReactElement {
   const logoRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const pos = useRef<"hero" | "nav">(pathname === "/" ? "hero" : "nav");
+  // Synced with pathname during render (NOT in useEffect) so scroll handler
+  // sees the new value immediately, before any scroll events fire.
+  const pathnameRef = useRef(pathname);
+  pathnameRef.current = pathname;
 
-  useGSAP(
-    () => {
-      const logo = logoRef.current;
-      if (!logo) return;
+  // Apply logo properties at a given 0→1 progress (hero→nav)
+  const applyProgress = useCallback((logo: HTMLElement, p: number): void => {
+    const nav = getNavPos();
+    const heroSize = getHeroSize();
+    const navScale = nav.h / heroSize;
 
-      const reduced = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
+    const heroTop = window.innerHeight * 0.22;
+    const heroLeft = window.innerWidth * 0.5;
 
-      // End position — matches NavLogo: fixed top-6 left-6 md:top-8 md:left-10 h-6
-      const isMd = window.innerWidth >= 768;
-      const navX = isMd ? 40 : 24; // left-10 = 2.5rem = 40px, left-6 = 1.5rem = 24px
-      const navY = isMd ? 32 : 24; // top-8 = 2rem = 32px, top-6 = 1.5rem = 24px
-      const navH = 24; // h-6 = 1.5rem = 24px
+    gsap.set(logo, {
+      top: heroTop + (nav.y - heroTop) * p,
+      left: heroLeft + (nav.x - heroLeft) * p,
+      xPercent: -50 + 50 * p,
+      yPercent: -50 + 50 * p,
+      scale: 1 + (navScale - 1) * p,
+      transformOrigin: p > 0.5 ? "top left" : "center center",
+      opacity: 0.7 + (0.5 - 0.7) * p,
+    });
 
-      // Start: centered, large
-      const heroSize = Math.min(window.innerWidth * 0.08, 100);
+    pos.current = p > 0.9 ? "nav" : "hero";
+  }, []);
 
-      if (reduced) {
-        gsap.set(logo, {
-          top: navY,
-          left: navX,
-          xPercent: 0,
-          yPercent: 0,
-          width: "auto",
-          height: navH,
-          opacity: 0.5,
-        });
-        return;
-      }
+  // Set to nav position instantly
+  const setNav = useCallback((logo: HTMLElement): void => {
+    const nav = getNavPos();
+    const navScale = nav.h / getHeroSize();
+    gsap.set(logo, {
+      top: nav.y,
+      left: nav.x,
+      xPercent: 0,
+      yPercent: 0,
+      scale: navScale,
+      transformOrigin: "top left",
+      opacity: 0.5,
+    });
+    pos.current = "nav";
+  }, []);
 
-      // Initial state: large, centered on hero
-      gsap.set(logo, {
-        top: "22%",
-        left: "50%",
+  // ─── Scroll handler: manually interpolates logo based on scrollY ───
+  useEffect(() => {
+    const logo = logoRef.current;
+    if (!logo) return;
+
+    const heroSize = getHeroSize();
+    gsap.set(logo, { height: heroSize, width: "auto" });
+
+    // Initial position based on current page
+    if (pathname === "/" && window.scrollY < 400) {
+      applyProgress(logo, Math.min(1, window.scrollY / 400));
+    } else {
+      setNav(logo);
+    }
+
+    const onScroll = (): void => {
+      // Check pathnameRef (synced during render) — NOT a stale useEffect value
+      if (pathnameRef.current !== "/") return;
+      const p = Math.min(1, window.scrollY / 400);
+      applyProgress(logo, p);
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ─── Route changes ───
+  const isFirst = useRef(true);
+  useEffect(() => {
+    if (isFirst.current) {
+      isFirst.current = false;
+      return;
+    }
+
+    const logo = logoRef.current;
+    if (!logo) return;
+
+    gsap.killTweensOf(logo);
+    const isHome = pathname === "/";
+
+    if (isHome && pos.current === "nav") {
+      // Animate to hero center, enable scroll tracking
+      gsap.to(logo, {
+        top: window.innerHeight * 0.22,
+        left: window.innerWidth * 0.5,
         xPercent: -50,
         yPercent: -50,
-        height: heroSize,
-        width: "auto",
+        scale: 1,
+        transformOrigin: "center center",
         opacity: 0.7,
-      });
+        duration: 0.6,
+        ease: "power3.inOut",
+        onComplete: () => {
+          pos.current = "hero";
 
-      // Scroll-driven morph to navbar position
-      gsap.to(logo, {
-        top: navY,
-        left: navX,
-        xPercent: 0,
-        yPercent: 0,
-        height: navH,
-        width: "auto",
-        opacity: 0.5,
-        ease: "none",
-        scrollTrigger: {
-          trigger: "#hero",
-          start: "top top",
-          end: "+=400",
-          scrub: 0.3,
         },
       });
-    },
-    { scope: logoRef },
-  );
+    } else if (isHome) {
+
+    } else {
+      // Leaving homepage — disable scroll tracking FIRST
+
+
+      if (pos.current === "nav") {
+        // Already at nav — just force it
+        setNav(logo);
+      } else {
+        // Animate to nav
+        const nav = getNavPos();
+        const navScale = nav.h / getHeroSize();
+        pos.current = "nav";
+        gsap.to(logo, {
+          top: nav.y,
+          left: nav.x,
+          xPercent: 0,
+          yPercent: 0,
+          scale: navScale,
+          transformOrigin: "top left",
+          opacity: 0.5,
+          duration: 0.6,
+          ease: "power3.inOut",
+        });
+      }
+    }
+  }, [pathname, setNav, applyProgress]);
+
+  // ─── Menu open/close ───
+  useEffect(() => {
+    const logo = logoRef.current;
+    if (!logo) return;
+
+    const handleMenu = (e: Event): void => {
+      const isOpen = (e as CustomEvent).detail as boolean;
+
+      if (isOpen) {
+  
+        pos.current = "hero";
+        gsap.to(logo, {
+          top: window.innerHeight * 0.22,
+          left: window.innerWidth * 0.5,
+          xPercent: -50,
+          yPercent: -50,
+          scale: 1,
+          transformOrigin: "center center",
+          opacity: 0.7,
+          duration: 0.5,
+          ease: "power3.inOut",
+        });
+      } else {
+        const heroEl = document.getElementById("hero");
+        const scrolledPast = heroEl && window.scrollY > 400;
+
+        if (heroEl && !scrolledPast) {
+          pos.current = "hero";
+
+          gsap.to(logo, {
+            top: window.innerHeight * 0.22,
+            left: window.innerWidth * 0.5,
+            xPercent: -50,
+            yPercent: -50,
+            scale: 1,
+            transformOrigin: "center center",
+            opacity: 0.7,
+            duration: 0.5,
+            ease: "power3.inOut",
+          });
+        } else {
+          const nav = getNavPos();
+          const navScale = nav.h / getHeroSize();
+          pos.current = "nav";
+          gsap.to(logo, {
+            top: nav.y,
+            left: nav.x,
+            xPercent: 0,
+            yPercent: 0,
+            scale: navScale,
+            transformOrigin: "top left",
+            opacity: 0.5,
+            duration: 0.5,
+            ease: "power3.inOut",
+          });
+        }
+      }
+    };
+
+    window.addEventListener("menu-toggle", handleMenu);
+    return () => window.removeEventListener("menu-toggle", handleMenu);
+  }, []);
 
   return (
     <div
