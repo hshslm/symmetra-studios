@@ -12,7 +12,7 @@ export default function HomePage(): React.ReactElement {
     <main>
       <Hero />
       <ProjectReel />
-      <LogoMarquee />
+      {/* <LogoMarquee /> */}
       <ServicesSection />
       <ProcessSection />
       <CTASection />

@@ -6,6 +6,7 @@ import SplashScreen from "@/components/splash/SplashScreen";
 import Navbar from "@/components/nav/Navbar";
 import CursorProvider from "@/components/cursor/CursorProvider";
 import TransitionWrapper from "@/components/transitions/TransitionWrapper";
+import MeshGradientBg from "@/components/shared/MeshGradientBg";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,7 +34,8 @@ export default function RootLayout({
       lang="en"
       className={`${displayFont.variable} ${bodyFont.variable}`}
     >
-      <body className="bg-bg text-text font-body antialiased overflow-x-hidden">
+      <body className="text-text font-body antialiased overflow-x-hidden">
+        <MeshGradientBg />
         <GSAPProvider>
           <CursorProvider>
             <LenisProvider>

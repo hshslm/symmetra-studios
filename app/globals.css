@@ -24,6 +24,7 @@
 
 @layer base {
   html {
+    /* Fallback bg — MeshGradientBg canvas covers this when WebGL is available */
     background-color: var(--color-bg);
     color: var(--color-text);
     scrollbar-gutter: stable;
