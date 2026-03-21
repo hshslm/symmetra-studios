@@ -41,7 +41,7 @@ export default function ProjectReelProgress({
         />
       </div>
 
-      <div className="relative h-[1px] flex-1 bg-white/10">
+      <div className="relative h-[1px] flex-1 bg-white/15">
         <div
           id="reel-progress-fill"
           className="absolute left-0 top-0 h-full bg-white/40"
@@ -49,7 +49,7 @@ export default function ProjectReelProgress({
         />
       </div>
 
-      <span className="font-body text-[11px] tabular-nums tracking-wider text-white/20">
+      <span className="font-body text-[11px] tabular-nums tracking-wider text-white/30">
         {String(total).padStart(2, "0")}
       </span>
     </div>

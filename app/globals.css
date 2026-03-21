@@ -99,7 +99,7 @@
 
 /* When hovering the services list, dim ALL items */
 .services-list:hover .entrance-complete {
-  opacity: 0.35;
+  opacity: 0.4;
 }
 
 /* Brighten ONLY the hovered item */
@@ -124,12 +124,12 @@
 
 /* Number brightens on hover */
 .entrance-complete:hover .service-number {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Description brightens on hover */
 .entrance-complete:hover .service-description {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -33,7 +33,7 @@ export default function ServiceItem({
             y2="0.5"
             stroke="white"
             strokeWidth="1"
-            opacity="0.12"
+            opacity="0.18"
             vectorEffect="non-scaling-stroke"
           />
         </svg>
@@ -60,7 +60,7 @@ export default function ServiceItem({
                      md:top-8
                      text-[60px] text-white transition-opacity duration-500
                      md:text-[72px] lg:text-[80px]"
-          style={{ opacity: 0.1 }}
+          style={{ opacity: 0.12 }}
           aria-hidden="true"
         >
           {service.number}
@@ -72,7 +72,7 @@ export default function ServiceItem({
           <p
             className="service-number mb-2 font-body text-[11px] font-semibold
                        md:mb-3
-                       uppercase tracking-[0.2em] text-white/30
+                       uppercase tracking-[0.2em] text-white/40
                        transition-colors duration-500"
           >
             {service.number}
@@ -116,7 +116,7 @@ export default function ServiceItem({
           {/* Description */}
           <p
             className="service-description max-w-md font-body text-sm
-                       leading-relaxed text-white/40 transition-colors
+                       leading-relaxed text-white/50 transition-colors
                        duration-500 md:text-[15px]"
           >
             {service.description}
@@ -127,7 +127,7 @@ export default function ServiceItem({
             <span
               className="inline-flex items-center gap-2 font-body text-[12px]
                          transition-all duration-500
-                         max-md:translate-y-0 max-md:text-white/30
+                         max-md:translate-y-0 max-md:text-white/40
                          md:translate-y-4 md:text-white/0
                          md:group-hover/service:translate-y-0
                          md:group-hover/service:text-white/40"
@@ -171,7 +171,7 @@ export default function ServiceItem({
               y2="0.5"
               stroke="white"
               strokeWidth="1"
-              opacity="0.12"
+              opacity="0.18"
               vectorEffect="non-scaling-stroke"
             />
           </svg>

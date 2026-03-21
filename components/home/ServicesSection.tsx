@@ -52,7 +52,7 @@ export default function ServicesSection(): React.ReactElement {
           type: "words",
           autoSplit: true,
           onSplit(self: SplitText) {
-            gsap.set(self.words, { color: "rgba(255,255,255,0.15)" });
+            gsap.set(self.words, { color: "rgba(255,255,255,0.2)" });
 
             return gsap.to(self.words, {
               color: "rgba(255,255,255,1)",
@@ -133,7 +133,7 @@ export default function ServicesSection(): React.ReactElement {
               tl.to(
                 ghostNumber,
                 {
-                  opacity: 0.1,
+                  opacity: 0.12,
                   y: 0,
                   duration: reduced ? 0.01 : 0.8,
                   ease: "power2.out",
@@ -214,7 +214,7 @@ export default function ServicesSection(): React.ReactElement {
         <div className="md:sticky md:top-[30vh]">
           <p
             className="mb-4 font-body text-[10px] uppercase tracking-[0.25em]
-                       text-white/20"
+                       text-white/30"
             data-services-label
           >
             Services
