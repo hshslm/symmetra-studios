@@ -9,7 +9,6 @@ import HeroVignette from "./HeroVignette";
 import HeroParticles from "./HeroParticles";
 import ScrollIndicator from "./ScrollIndicator";
 import HeroDimming from "./HeroDimming";
-import LineDivider from "@/components/LineDivider";
 import TextReveal from "@/components/TextReveal";
 
 export default function Hero(): React.ReactElement {
@@ -99,20 +98,6 @@ export default function Hero(): React.ReactElement {
       {/* Scroll-driven dimming sequence */}
       <HeroDimming />
 
-      {/* Exit line: draws at 70-100% of dimming scroll */}
-      <div
-        id="hero-exit-line"
-        className="absolute bottom-0 left-0 z-20 w-full"
-      >
-        <LineDivider
-          scrollTrigger={false}
-          direction="left-to-right"
-          duration={0.8}
-          ease="power2.inOut"
-          opacity={0.3}
-          className="w-full"
-        />
-      </div>
     </section>
   );
 }

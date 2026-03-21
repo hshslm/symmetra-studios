@@ -133,20 +133,6 @@ export default function HeroDimming(): React.ReactElement {
         );
       }
 
-      // 70-100%: Exit line draws left-to-right
-      const exitLine = document.querySelector(
-        "#hero-exit-line line",
-      ) as SVGLineElement | null;
-      if (exitLine) {
-        gsap.killTweensOf(exitLine);
-        gsap.set(exitLine, { drawSVG: "0%" });
-
-        tl.to(
-          exitLine,
-          { drawSVG: "100%", duration: 0.3, ease: "power2.inOut" },
-          0.7,
-        );
-      }
 
       ScrollTrigger.refresh();
     },
