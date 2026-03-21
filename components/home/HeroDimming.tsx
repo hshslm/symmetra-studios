@@ -46,8 +46,9 @@ export default function HeroDimming(): React.ReactElement {
 
       // 20-30%: Scroll indicator fades
       if (scrollIndicator) {
-        tl.to(
+        tl.fromTo(
           scrollIndicator,
+          { opacity: 1, y: 0 },
           { opacity: 0, y: 10, duration: 0.1, ease: "power2.in" },
           0.2,
         );
@@ -64,8 +65,9 @@ export default function HeroDimming(): React.ReactElement {
 
       // Video dims via filter (brightness 0.4 -> 0.08)
       if (video) {
-        tl.to(
+        tl.fromTo(
           video,
+          { filter: "brightness(0.85) contrast(1.1)" },
           {
             filter: "brightness(0.08) contrast(1.1)",
             duration: 0.3,
@@ -76,8 +78,9 @@ export default function HeroDimming(): React.ReactElement {
       }
 
       if (title) {
-        tl.to(
+        tl.fromTo(
           title,
+          { opacity: 1, y: 0 },
           {
             opacity: 0,
             ...(reducedMotion ? {} : { y: contentDrift }),
@@ -98,8 +101,9 @@ export default function HeroDimming(): React.ReactElement {
 
       // 50-70%: Final content fades
       if (tagline) {
-        tl.to(
+        tl.fromTo(
           tagline,
+          { opacity: 1, y: 0 },
           {
             opacity: 0,
             ...(reducedMotion ? {} : { y: isMobile ? -10 : -20 }),
@@ -112,8 +116,9 @@ export default function HeroDimming(): React.ReactElement {
 
       // Video scale for depth
       if (video && !reducedMotion) {
-        tl.to(
+        tl.fromTo(
           video,
+          { scale: 1 },
           { scale: 1.03, duration: 0.2, ease: "power2.inOut" },
           0.5,
         );
