@@ -5,13 +5,11 @@ import type { ProcessStep as ProcessStepType } from "@/lib/process-data";
 interface ProcessStepProps {
   step: ProcessStepType;
   index: number;
-  total: number;
 }
 
 export default function ProcessStep({
   step,
   index,
-  total,
 }: ProcessStepProps): React.ReactElement {
   return (
     <div

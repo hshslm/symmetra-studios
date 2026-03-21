@@ -185,9 +185,6 @@ export default function ProcessSection(): React.ReactElement {
       // ─── DESKTOP: Horizontal scroll system ───
 
       // ── Heading entrance + fade-out ──
-      const headingContainer = section.querySelector(
-        "[data-process-heading-container]",
-      );
       const heading = section.querySelector("[data-process-heading]");
       const headingLabel = section.querySelector("[data-process-label]");
 
@@ -590,7 +587,7 @@ export default function ProcessSection(): React.ReactElement {
           style={{ paddingLeft: "8vw" }}
         >
           {processSteps.map((step, i) => (
-            <ProcessStep key={step.id} step={step} index={i} total={TOTAL} />
+            <ProcessStep key={step.id} step={step} index={i} />
           ))}
 
           {/* End spacer — minimal DOM buffer, scroll math ignores this */}
