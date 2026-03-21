@@ -44,7 +44,7 @@ export default function RootLayout({
               <SplashScreen />
               <TransitionWrapper>
                 <Navbar />
-                <div id="page-content">{children}</div>
+                <div id="page-content" className="relative z-10">{children}</div>
               </TransitionWrapper>
             </LenisProvider>
           </CursorProvider>

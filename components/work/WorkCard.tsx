@@ -8,6 +8,7 @@ interface WorkCardProps {
   index: number
   isHero?: boolean
   fillHeight?: boolean
+  disableParallax?: boolean
 }
 
 export default function WorkCard({
@@ -15,6 +16,7 @@ export default function WorkCard({
   index,
   isHero = false,
   fillHeight = false,
+  disableParallax = false,
 }: WorkCardProps): React.ReactElement {
   const cardRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -114,7 +116,6 @@ export default function WorkCard({
         style={{
           transformStyle: 'preserve-3d',
           transition: 'transform 0.15s ease-out',
-          willChange: 'transform',
         }}
         onMouseMove={isTouchDevice ? undefined : handleMouseMove}
         onMouseEnter={isTouchDevice ? undefined : handleMouseEnter}
@@ -129,8 +130,8 @@ export default function WorkCard({
 
             {/* Video — always visible, plays on hover */}
             <div
-              className="absolute inset-[-15%] will-change-transform"
-              data-parallax-image
+              className={disableParallax ? "absolute inset-0" : "absolute inset-[-15%]"}
+              data-parallax-image={disableParallax ? undefined : true}
             >
               <video
                 ref={videoRef}
@@ -139,6 +140,7 @@ export default function WorkCard({
                 muted
                 loop
                 playsInline
+                preload="auto"
               >
                 <source src={project.videoSrc} type="video/mp4" />
               </video>

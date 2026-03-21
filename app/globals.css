@@ -55,6 +55,14 @@
   }
 }
 
+/* Suppress native video controls */
+video::-webkit-media-controls {
+  display: none !important;
+}
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
 @layer utilities {
   .max-content {
     max-width: var(--max-width);
@@ -184,6 +192,33 @@
 @keyframes featured-progress {
   from { transform: scaleX(0); }
   to { transform: scaleX(1); }
+}
+
+/* ─── Project Video Hero Animations ─── */
+
+@keyframes ping-slow {
+  0% { transform: scale(1); opacity: 0.4; }
+  75%, 100% { transform: scale(1.5); opacity: 0; }
+}
+.animate-ping-slow {
+  animation: ping-slow 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes scroll-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+.animate-scroll-line {
+  animation: scroll-line 1.8s ease-in-out infinite;
+}
+
+@keyframes grainShift {
+  0%, 100% { transform: translate(0, 0); }
+  16% { transform: translate(-5%, -10%); }
+  33% { transform: translate(3%, -15%); }
+  50% { transform: translate(12%, 9%); }
+  66% { transform: translate(9%, -3%); }
+  83% { transform: translate(-7%, 11%); }
 }
 
 @media (prefers-reduced-motion: reduce) {
