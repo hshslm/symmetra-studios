@@ -66,6 +66,30 @@
   }
 }
 
+/* Marquee edge fade — logos dissolve at horizontal edges */
+.marquee-edge-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+/* Marquee logo hover brighten — overrides inline greyscale/opacity */
+[data-marquee-item]:hover img {
+  opacity: 0.5 !important;
+  filter: grayscale(0.5) brightness(0.8) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
