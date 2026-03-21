@@ -54,7 +54,7 @@ export default function Hero(): React.ReactElement {
     <section
       ref={heroRef}
       id="hero"
-      className="relative h-screen w-full overflow-hidden"
+      className="relative h-dvh w-full overflow-hidden"
     >
       {/* Layer 1: Video background */}
       <HeroVideo
@@ -97,7 +97,6 @@ export default function Hero(): React.ReactElement {
 
       {/* Scroll-driven dimming sequence */}
       <HeroDimming />
-
     </section>
   );
 }

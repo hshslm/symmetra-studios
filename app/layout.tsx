@@ -7,6 +7,7 @@ import Navbar from "@/components/nav/Navbar";
 import CursorProvider from "@/components/cursor/CursorProvider";
 import TransitionWrapper from "@/components/transitions/TransitionWrapper";
 import MeshGradientBg from "@/components/shared/MeshGradientBg";
+import ScrollLogo from "@/components/shared/ScrollLogo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({
     >
       <body className="text-text font-body antialiased overflow-x-hidden">
         <MeshGradientBg />
+        <ScrollLogo />
         <GSAPProvider>
           <CursorProvider>
             <LenisProvider>

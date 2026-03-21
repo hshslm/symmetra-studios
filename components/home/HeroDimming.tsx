@@ -34,10 +34,13 @@ export default function HeroDimming(): React.ReactElement {
         scrollTrigger: {
           trigger: hero,
           start: "top top",
-          end: "+=500vh",
+          end: () =>
+            `+=${window.innerHeight + (document.getElementById("hero")?.offsetHeight ?? 0)}`,
           pin: true,
           scrub: 0.5,
           anticipatePin: 1,
+          refreshPriority: 2,
+          id: "hero-dimming",
         },
       });
 
@@ -133,6 +136,8 @@ export default function HeroDimming(): React.ReactElement {
         );
       }
 
+      // Hold fully dimmed state — absorbs the extra scroll from hero height
+      tl.to({}, { duration: 0.15 });
 
       ScrollTrigger.refresh();
     },

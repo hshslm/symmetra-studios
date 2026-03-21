@@ -148,12 +148,6 @@ export default function ProjectReel(): React.ReactElement {
           start: "top bottom",
           end: "top top",
           scrub: 0.3,
-          snap: {
-            snapTo: 1,
-            duration: { min: 0.4, max: 1 },
-            delay: 0.15,
-            ease: "power2.inOut",
-          },
         },
       });
 
@@ -214,6 +208,7 @@ export default function ProjectReel(): React.ReactElement {
           pin: true,
           scrub: true,
           anticipatePin: 1,
+          refreshPriority: 1,
           snap: {
             // Snap to middle of each buffer zone (dead zone between transitions)
             snapTo: [
