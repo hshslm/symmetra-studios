@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { gsap } from "@/lib/gsap";
 
 function getNavPos(): { x: number; y: number; h: number } {
@@ -16,6 +16,7 @@ function getHeroSize(): number {
 export default function ScrollLogo(): React.ReactElement {
   const logoRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const router = useRouter();
   const pos = useRef<"hero" | "nav">(pathname === "/" ? "hero" : "nav");
   // Synced with pathname during render (NOT in useEffect) so scroll handler
   // sees the new value immediately, before any scroll events fire.
@@ -216,14 +217,31 @@ export default function ScrollLogo(): React.ReactElement {
       className="pointer-events-auto fixed z-[52]"
       data-cursor="pointer"
     >
-      <a href="/" aria-label="Symmetra Studios - Home">
+      <button
+        onClick={() => {
+          // Close menu if open
+          window.dispatchEvent(
+            new CustomEvent("menu-toggle", { detail: false }),
+          );
+
+          if (pathnameRef.current === "/") {
+            // Already on homepage — scroll to top
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else {
+            // Navigate to homepage
+            router.push("/");
+          }
+        }}
+        aria-label="Symmetra Studios - Home"
+        className="block h-full w-auto"
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo.svg"
           alt="Symmetra Studios"
           className="h-full w-auto"
         />
-      </a>
+      </button>
     </div>
   );
 }
