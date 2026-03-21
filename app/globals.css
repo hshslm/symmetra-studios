@@ -133,6 +133,59 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+/* ─── Work Grid Spotlight System ─── */
+/* Dim siblings when hovering over a card in the grid */
+
+.work-grid.spotlight-ready:hover .work-card-wrapper {
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+}
+
+.work-grid.spotlight-ready:hover .work-card-wrapper:hover {
+  opacity: 1;
+}
+
+.work-card-wrapper {
+  transition: opacity 0.5s ease;
+}
+
+@media (hover: none) {
+  .work-grid.spotlight-ready:hover .work-card-wrapper {
+    opacity: 1;
+  }
+}
+
+/* ─── Work List Spotlight System ─── */
+
+.work-list.spotlight-ready:hover .work-list-item {
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+}
+
+.work-list.spotlight-ready:hover .work-list-item:hover {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .work-list.spotlight-ready:hover .work-list-item {
+    opacity: 1;
+  }
+}
+
+/* Hide scrollbar for carousel */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@keyframes featured-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
