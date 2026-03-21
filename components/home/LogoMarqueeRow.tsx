@@ -118,8 +118,8 @@ export default function LogoMarqueeRow({
             alt={logo.name}
             className="pointer-events-none h-4 w-auto select-none transition-all duration-300 md:h-5"
             style={{
-              filter: "grayscale(1) brightness(0.6)",
-              opacity: 0.25,
+              filter: "grayscale(1) brightness(0.7)",
+              opacity: 0.4,
             }}
             draggable={false}
           />

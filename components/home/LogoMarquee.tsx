@@ -79,16 +79,8 @@ export default function LogoMarquee(): React.ReactElement | null {
   if (clientLogos.length < MIN_LOGOS) return null;
 
   return (
-    <section
-      ref={sectionRef}
-      data-section
-      className="relative flex h-dvh w-full flex-col justify-end"
-    >
-      {/* Upper breathing space — Phase 10b fills with services */}
-      <div className="flex-1" />
-
-      {/* Marquee content sits in the bottom portion */}
-      <div className="pb-12 md:pb-16">
+    <section ref={sectionRef} className="relative w-full">
+      <div className="py-16 md:py-24">
         {/* DrawSVG divider */}
         <div className="mb-8 px-8 md:mb-10 md:px-16 lg:px-24">
           <svg
@@ -105,7 +97,7 @@ export default function LogoMarquee(): React.ReactElement | null {
               y2="0.5"
               stroke="white"
               strokeWidth="1"
-              opacity="0.1"
+              opacity="0.15"
               vectorEffect="non-scaling-stroke"
             />
           </svg>
@@ -116,7 +108,7 @@ export default function LogoMarquee(): React.ReactElement | null {
           data-marquee-label
           className="mb-6 px-8 md:px-16 lg:px-24"
         >
-          <p className="font-body text-[10px] uppercase tracking-[0.25em] text-white/20">
+          <p className="font-body text-[10px] uppercase tracking-[0.25em] text-white/30">
             Trusted By
           </p>
         </div>

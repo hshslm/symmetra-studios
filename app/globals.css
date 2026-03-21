@@ -90,6 +90,48 @@
   filter: grayscale(0.5) brightness(0.8) !important;
 }
 
+/* ─── Services Hover System ─── */
+/* Only apply after entrance animations are done */
+
+.entrance-complete {
+  transition: opacity 0.5s ease;
+}
+
+/* When hovering the services list, dim ALL items */
+.services-list:hover .entrance-complete {
+  opacity: 0.35;
+}
+
+/* Brighten ONLY the hovered item */
+.services-list:hover .entrance-complete:hover {
+  opacity: 1;
+}
+
+/* Title magnetic shift on hover */
+.entrance-complete:hover .service-title {
+  transform: translateX(8px);
+}
+
+/* Thumbnail clip-path wipe reveal */
+.entrance-complete:hover .service-thumbnail {
+  clip-path: inset(0 0% 0 0) !important;
+}
+
+/* Ghost number brightens on hover */
+.entrance-complete:hover .service-ghost-number {
+  opacity: 0.18 !important;
+}
+
+/* Number brightens on hover */
+.entrance-complete:hover .service-number {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Description brightens on hover */
+.entrance-complete:hover .service-description {
+  color: rgba(255, 255, 255, 0.6);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
