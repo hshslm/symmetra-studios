@@ -12,15 +12,14 @@ export default function HeroVignette({
       className={`absolute inset-0 pointer-events-none ${className}`}
       style={{
         background: `
-          radial-gradient(
-            ellipse at center,
-            transparent 0%,
-            transparent 30%,
-            rgba(6, 6, 6, 0.4) 60%,
-            rgba(6, 6, 6, 0.85) 100%
+          linear-gradient(
+            to bottom,
+            rgba(6, 6, 6, 0.5) 0%,
+            rgba(6, 6, 6, 0.1) 35%,
+            rgba(6, 6, 6, 0.1) 65%,
+            rgba(6, 6, 6, 0.7) 100%
           )
         `,
-        opacity: 0.6,
       }}
       aria-hidden="true"
     />

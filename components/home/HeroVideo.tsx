@@ -34,8 +34,9 @@ export default function HeroVideo({
   return (
     <video
       ref={videoRef}
+      id="hero-video"
       className="absolute inset-0 h-full w-full object-cover"
-      style={{ opacity: 0 }}
+      style={{ opacity: 0, filter: "brightness(0.4) contrast(1.1)" }}
       muted
       autoPlay
       loop

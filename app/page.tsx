@@ -5,9 +5,9 @@ export default function HomePage(): React.ReactElement {
     <main>
       <Hero />
 
-      {/* Placeholder for Phase 8+ sections */}
-      <section className="flex h-screen items-center justify-center bg-bg">
-        <p className="font-body text-sm text-text-secondary">
+      {/* Placeholder for Phase 9+ sections */}
+      <section className="relative bg-bg">
+        <p className="py-32 text-center font-body text-sm text-text-secondary">
           Featured projects go here (Phase 9)
         </p>
       </section>
