@@ -236,7 +236,7 @@ export default function WorkPageClient(): React.ReactElement {
         </div>
 
         {/* Views */}
-        <div ref={viewContainerRef} className="min-h-[50vh] overflow-hidden">
+        <div ref={viewContainerRef} className={`min-h-[50vh] ${viewMode === 'featured' ? '' : 'overflow-hidden'}`}>
           {viewMode === 'grid' && (
             <WorkGrid projects={filteredProjects} />
           )}

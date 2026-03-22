@@ -17,7 +17,7 @@ interface MenuOverlayProps {
 const menuLinks = [
   { label: "Work", href: "/work" },
   { label: "Studio", href: "/studio" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const socialLinks = [

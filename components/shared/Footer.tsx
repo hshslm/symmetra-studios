@@ -13,7 +13,7 @@ void DrawSVGPlugin;
 const navLinks = [
   { label: "Work", href: "/work" },
   { label: "Studio", href: "/studio" },
-  { label: "Contact", href: "mailto:hello@symmetrastudios.com" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const socialLinks = [

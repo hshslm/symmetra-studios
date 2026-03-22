@@ -85,21 +85,35 @@ export default function ProjectReel(): React.ReactElement {
 
       // SplitText: split client names into chars, titles into words
       // SplitText handles overflow masking via mask: "chars"/"words"
+      // Helper: add bottom padding to mask wrappers for descenders (g, y, p)
+      const padMasks = (split: SplitText | null): void => {
+        if (!split) return;
+        split.masks.forEach((mask: Element) => {
+          (mask as HTMLElement).style.paddingBottom = "0.15em";
+        });
+      };
+
       const clientSplits = PROJECTS.map((_, i) => {
         const el = document.getElementById(`reel-client-${i}`);
         if (!el) return null;
-        return SplitText.create(el, { type: "chars", mask: "chars" });
+        const s = SplitText.create(el, { type: "chars", mask: "chars" });
+        padMasks(s);
+        return s;
       });
       const titleSplits = PROJECTS.map((_, i) => {
         const el = document.getElementById(`reel-title-${i}`);
         if (!el) return null;
-        return SplitText.create(el, { type: "chars", mask: "chars" });
+        const s = SplitText.create(el, { type: "chars", mask: "chars" });
+        padMasks(s);
+        return s;
       });
 
       const linkTextSplits = PROJECTS.map((_, i) => {
         const el = document.getElementById(`reel-link-text-${i}`);
         if (!el) return null;
-        return SplitText.create(el, { type: "chars", mask: "chars" });
+        const s = SplitText.create(el, { type: "chars", mask: "chars" });
+        padMasks(s);
+        return s;
       });
 
       // Pre-set hidden text elements (projects 1+)

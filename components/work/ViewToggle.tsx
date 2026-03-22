@@ -43,7 +43,7 @@ export default function ViewToggle({
   return (
     <div
       ref={containerRef}
-      className="flex items-center gap-1 bg-white/[0.03]
+      className="flex w-fit items-center gap-1 bg-white/[0.03]
                  rounded-full p-1 border border-white/[0.06]"
       role="tablist"
       aria-label="View mode"

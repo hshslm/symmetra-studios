@@ -93,8 +93,9 @@ export default function StudioHero(): React.ReactElement {
       <span
         className="pointer-events-none absolute left-1/2 top-1/2
                    -translate-x-1/2 -translate-y-1/2 select-none
-                   whitespace-nowrap font-display text-[250px] leading-none
-                   text-white/[0.015] md:text-[400px] lg:text-[500px]"
+                   font-display text-[120px] leading-[0.85]
+                   text-white/[0.015] sm:text-[180px] md:text-[280px]
+                   lg:text-[400px] xl:text-[500px]"
         aria-hidden="true"
       >
         STUDIO

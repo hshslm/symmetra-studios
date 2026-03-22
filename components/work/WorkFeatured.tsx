@@ -90,10 +90,14 @@ export default function WorkFeatured({ projects }: WorkFeaturedProps): React.Rea
       )
     }
 
-    // SplitText on title
+    // SplitText on title — no revert to avoid letter-spacing flicker
     if (heading && !reduced) {
       const split = SplitText.create(heading, {
         type: 'chars', mask: 'chars',
+      })
+      // Add bottom padding to mask wrappers for descenders (g, y, p)
+      split.masks.forEach((mask: Element) => {
+        ;(mask as HTMLElement).style.paddingBottom = '0.15em'
       })
       gsap.from(split.chars, {
         yPercent: 100,
@@ -101,7 +105,6 @@ export default function WorkFeatured({ projects }: WorkFeaturedProps): React.Rea
         stagger: 0.02,
         ease: 'power3.out',
         delay: 0.2,
-        onComplete: () => split.revert(),
       })
     }
   }, [activeIdx])
@@ -168,10 +171,8 @@ export default function WorkFeatured({ projects }: WorkFeaturedProps): React.Rea
   return (
     <div
       ref={containerRef}
-      className="relative overflow-hidden"
+      className="relative -mx-8 overflow-hidden md:-mx-16 lg:-mx-24"
       style={{
-        width: '100vw',
-        marginLeft: 'calc(-50vw + 50%)',
         height: 'calc(100vh - 200px)',
         minHeight: '500px',
       }}
@@ -204,7 +205,7 @@ export default function WorkFeatured({ projects }: WorkFeaturedProps): React.Rea
       <div
         data-featured-content
         className="absolute bottom-0 left-0 right-0
-                   px-8 md:px-16 lg:px-24 pb-12 md:pb-16 z-10"
+                   px-6 pb-6 sm:px-10 sm:pb-10 md:px-16 md:pb-16 lg:px-24 z-10"
       >
         {/* Category + Client */}
         <p className="font-body text-[10px] uppercase tracking-[0.25em]
@@ -255,8 +256,8 @@ export default function WorkFeatured({ projects }: WorkFeaturedProps): React.Rea
       </div>
 
       {/* Navigation dots + progress */}
-      <div className="absolute bottom-12 md:bottom-16 right-8 md:right-16
-                      lg:right-24 z-10 flex items-center gap-3">
+      <div className="absolute bottom-16 right-6 z-10 flex items-center
+                      gap-3 sm:right-10 md:bottom-20 md:right-16 lg:right-24">
 
         {/* Prev arrow */}
         <button
@@ -318,7 +319,7 @@ export default function WorkFeatured({ projects }: WorkFeaturedProps): React.Rea
       </div>
 
       {/* Counter */}
-      <div className="absolute top-6 right-8 md:right-16 lg:right-24 z-10">
+      <div className="absolute right-6 top-6 z-10 sm:right-10 md:right-16 lg:right-24">
         <span className="font-body text-xs text-white/25
                          tabular-nums tracking-wider">
           {String(safeIdx + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
