@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useEffect, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { gsap } from "@/lib/gsap";
 
 function getNavPos(): { x: number; y: number; h: number } {
@@ -16,7 +17,7 @@ function getHeroSize(): number {
 export default function ScrollLogo(): React.ReactElement {
   const logoRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const router = useRouter();
+  const homeLinkRef = useRef<HTMLAnchorElement>(null);
   const pos = useRef<"hero" | "nav">(pathname === "/" ? "hero" : "nav");
   // Synced with pathname during render (NOT in useEffect) so scroll handler
   // sees the new value immediately, before any scroll events fire.
@@ -228,8 +229,8 @@ export default function ScrollLogo(): React.ReactElement {
             // Already on homepage — scroll to top
             window.scrollTo({ top: 0, behavior: "smooth" });
           } else {
-            // Navigate to homepage
-            router.push("/");
+            // Navigate via hidden link to trigger page transition
+            homeLinkRef.current?.click();
           }
         }}
         aria-label="Symmetra Studios - Home"
@@ -242,6 +243,14 @@ export default function ScrollLogo(): React.ReactElement {
           className="h-full w-auto"
         />
       </button>
+      {/* Hidden link for page-transition-aware navigation */}
+      <Link
+        ref={homeLinkRef}
+        href="/"
+        className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
     </div>
   );
 }
