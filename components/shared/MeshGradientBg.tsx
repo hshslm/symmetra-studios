@@ -9,6 +9,13 @@ export default function MeshGradientBg(): React.ReactElement {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // ─── MOBILE: skip WebGL, CSS fallback handles it ───
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) {
+      canvas.style.display = "none";
+      return;
+    }
+
     const gl = canvas.getContext("webgl", {
       alpha: true,
       antialias: false,
@@ -29,8 +36,6 @@ export default function MeshGradientBg(): React.ReactElement {
 
       uniform vec2 uResolution;
       uniform float uTime;
-      uniform vec2 uMouse;
-      uniform vec2 uMouseSmooth;
 
       vec4 permute(vec4 x) { return mod(((x*34.0)+1.0)*x, 289.0); }
       vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
@@ -82,7 +87,7 @@ export default function MeshGradientBg(): React.ReactElement {
         float val = 0.0;
         float amp = 0.5;
         float freq = 1.0;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 2; i++) {
           val += amp * snoise(p * freq);
           freq *= 2.0;
           amp *= 0.5;
@@ -98,21 +103,10 @@ export default function MeshGradientBg(): React.ReactElement {
 
         float t = uTime * 0.15;
 
-        // Cursor influence
-        vec2 mousePos = uMouseSmooth;
-        mousePos.x *= aspect;
-        float mouseDist = length(p - mousePos);
-        float mouseInfluence = smoothstep(0.8, 0.0, mouseDist);
-
-        // UV distortion driven by noise + cursor
+        // UV distortion driven by noise
         vec2 distortion = vec2(
           fbm(vec3(p * 1.8 + t * 0.3, t * 0.5)),
           fbm(vec3(p * 1.8 + t * 0.3 + 100.0, t * 0.5 + 50.0))
-        );
-
-        distortion += mouseInfluence * 0.15 * vec2(
-          snoise(vec3(p * 3.0, t * 2.0)),
-          snoise(vec3(p * 3.0 + 50.0, t * 2.0))
         );
 
         vec2 warped = p + distortion * 0.3;
@@ -132,14 +126,6 @@ export default function MeshGradientBg(): React.ReactElement {
         color = mix(color, band1, n1 * 0.8);
         color = mix(color, band2, n2 * 0.6);
         color = mix(color, band3, n3 * 0.4);
-
-        // Cursor glow
-        float glow = mouseInfluence * 0.08;
-        color += vec3(glow * 0.8, glow * 0.8, glow * 1.0);
-
-        // Film grain
-        float grain = (fract(sin(dot(uv * uTime * 100.0, vec2(12.9898, 78.233))) * 43758.5453) - 0.5) * 0.015;
-        color += grain;
 
         // Subtle vignette
         float vignette = 1.0 - smoothstep(0.4, 1.4, length(uv - 0.5) * 1.5);
@@ -197,29 +183,14 @@ export default function MeshGradientBg(): React.ReactElement {
     // ─── UNIFORMS ───
     const uRes = gl.getUniformLocation(program, "uResolution");
     const uTime = gl.getUniformLocation(program, "uTime");
-    const uMouseSmooth = gl.getUniformLocation(program, "uMouseSmooth");
 
     // ─── STATE ───
-    const mouseNorm = { x: 0.5, y: 0.5 };
-    const mouseSmooth = { x: 0.5, y: 0.5 };
     let animId: number = 0;
     let startTime = performance.now();
 
-    // ─── MOUSE TRACKING ───
-    const handleMouse = (e: MouseEvent): void => {
-      mouseNorm.x = e.clientX / window.innerWidth;
-      mouseNorm.y = 1.0 - e.clientY / window.innerHeight;
-    };
-    const handleTouch = (e: TouchEvent): void => {
-      mouseNorm.x = e.touches[0].clientX / window.innerWidth;
-      mouseNorm.y = 1.0 - e.touches[0].clientY / window.innerHeight;
-    };
-    window.addEventListener("mousemove", handleMouse);
-    window.addEventListener("touchmove", handleTouch, { passive: true });
-
     // ─── RESIZE ───
     const resize = (): void => {
-      const dpr = Math.min(window.devicePixelRatio, 1.5);
+      const dpr = 1.0;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       gl.viewport(0, 0, canvas.width, canvas.height);
@@ -227,19 +198,19 @@ export default function MeshGradientBg(): React.ReactElement {
     resize();
     window.addEventListener("resize", resize);
 
-    // ─── RENDER LOOP ───
+    // ─── RENDER LOOP (30fps via frame-skipping) ───
+    let frameCount = 0;
     const render = (): void => {
+      frameCount++;
+      animId = requestAnimationFrame(render);
+
+      // Render every other frame (30fps)
+      if (frameCount % 2 !== 0) return;
+
       const elapsed = (performance.now() - startTime) / 1000;
-
-      mouseSmooth.x += (mouseNorm.x - mouseSmooth.x) * 0.03;
-      mouseSmooth.y += (mouseNorm.y - mouseSmooth.y) * 0.03;
-
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, elapsed);
-      gl.uniform2f(uMouseSmooth, mouseSmooth.x, mouseSmooth.y);
-
       gl.drawArrays(gl.TRIANGLES, 0, 6);
-      animId = requestAnimationFrame(render);
     };
     render();
 
@@ -249,6 +220,7 @@ export default function MeshGradientBg(): React.ReactElement {
         cancelAnimationFrame(animId);
       } else {
         startTime = performance.now();
+        frameCount = 0;
         render();
       }
     };
@@ -261,15 +233,12 @@ export default function MeshGradientBg(): React.ReactElement {
       cancelAnimationFrame(animId);
       gl.uniform2f(uRes, canvas.width, canvas.height);
       gl.uniform1f(uTime, 0);
-      gl.uniform2f(uMouseSmooth, 0.5, 0.5);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     }
 
     // ─── CLEANUP ───
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener("mousemove", handleMouse);
-      window.removeEventListener("touchmove", handleTouch);
       window.removeEventListener("resize", resize);
       document.removeEventListener("visibilitychange", handleVisibility);
       gl.deleteProgram(program);
@@ -280,10 +249,21 @@ export default function MeshGradientBg(): React.ReactElement {
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="pointer-events-none fixed inset-0 z-0"
-      aria-hidden="true"
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className="pointer-events-none fixed inset-0 z-0"
+        aria-hidden="true"
+      />
+      {/* CSS gradient fallback for mobile (no WebGL) */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 md:hidden"
+        aria-hidden="true"
+        style={{
+          background:
+            "radial-gradient(ellipse at 30% 40%, rgba(25,25,33,0.4) 0%, rgba(6,6,6,0) 60%)",
+        }}
+      />
+    </>
   );
 }
